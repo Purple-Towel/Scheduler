@@ -29,12 +29,10 @@ export default function Application(props) {
   }, [])
 
   const appointments = getAppointmentsForDay(state, state.day);
-  appointments.push({id: "last", time: "5pm"});
 
   const interviewers = getInterviewersForDay(state, state.day);
 
-  function bookInterview(id, interview, mode, cb) {
-    cb(mode);
+  function bookInterview(id, interview, mode, errorMode, cb) {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -43,18 +41,16 @@ export default function Application(props) {
       ...state.appointments,
       [id]: appointment
     };
-    const afterPromise = function() { 
-      setState({
-        ...state,
-        appointments
-      });
-    }
+
     axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
-    .then(afterPromise());
+    .then((response) => setState({...state, appointments}))
+    .then(() => cb(mode, true))
+    .catch(err => {
+      cb(errorMode, true);
+    });
   }
 
-  function cancelInterview(id, mode, cb) {
-    cb(mode);
+  function cancelInterview(id, mode, errorMode, cb) {
     const appointment = {
       ...state.appointments[id],
       interview: null
@@ -63,14 +59,13 @@ export default function Application(props) {
       ...state.appointments,
       [id]: appointment
     }
-    const afterPromise = function() {
-      setState({
-        ...state,
-        appointments
-      });
-    }
+
     axios.delete(`http://localhost:8001/api/appointments/${id}`)
-    .then(afterPromise());
+    .then((response) => setState({...state, appointments}))
+    .then(() => cb(mode, true))
+    .catch((err) => {
+      cb(errorMode, true);
+    });
   }
 
   const schedule = appointments.map((appointment) => {
@@ -111,6 +106,7 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {schedule}
+        <Appointment id="last" time="5pm" />
       </section>
     </main>
   );
