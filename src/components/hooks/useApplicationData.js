@@ -22,6 +22,17 @@ export function useApplicationData() {
   }, []);
 
   function bookInterview(id, interview, mode, errorMode, cb) {
+    const selectedDay = state.day;
+    let indexOfDay = null;
+    let spotsFromDay = null;
+
+    for (let i = 0; i < state.days.length; i ++) {
+      if (state.days[i].name === selectedDay) {
+        indexOfDay = i;
+        spotsFromDay = state.days[i].spots;
+      }
+    }
+
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -31,8 +42,18 @@ export function useApplicationData() {
       [id]: appointment
     };
 
+    const newDayItem = {
+      ...state.days[indexOfDay],
+      spots: spotsFromDay - 1
+    };
+
+    const newDaysList = {
+      ...state.days,
+      [indexOfDay]: newDayItem
+    }
+
     axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
-    .then((response) => setState({...state, appointments}))
+    .then((response) => setState({...state, appointments, days: Object.values(newDaysList)}))
     .then(() => cb(mode, true))
     .catch(err => {
       cb(errorMode, true);
@@ -40,6 +61,17 @@ export function useApplicationData() {
   }
 
   function cancelInterview(id, mode, errorMode, cb) {
+    const selectedDay = state.day;
+    let indexOfDay = null;
+    let spotsFromDay = null;
+
+    for (let i = 0; i < state.days.length; i ++) {
+      if (state.days[i].name === selectedDay) {
+        indexOfDay = i;
+        spotsFromDay = state.days[i].spots;
+      }
+    }
+
     const appointment = {
       ...state.appointments[id],
       interview: null
@@ -49,8 +81,19 @@ export function useApplicationData() {
       [id]: appointment
     }
 
+    const newDayItem = {
+      ...state.days[indexOfDay],
+      spots: spotsFromDay + 1
+    };
+
+    const newDaysList = {
+      ...state.days,
+      [indexOfDay]: newDayItem
+    }
+
+
     axios.delete(`http://localhost:8001/api/appointments/${id}`)
-    .then((response) => setState({...state, appointments}))
+    .then((response) => setState({...state, appointments, days: Object.values(newDaysList)}))
     .then(() => cb(mode, true))
     .catch((err) => {
       cb(errorMode, true);
