@@ -33,6 +33,16 @@ export function useApplicationData() {
       }
     }
 
+    const newDayItem = {
+      ...state.days[indexOfDay],
+      spots: state.appointments[id].interview ? spotsFromDay : spotsFromDay - 1
+    };
+
+    const newDaysList = {
+      ...state.days,
+      [indexOfDay]: newDayItem
+    }
+
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -41,16 +51,6 @@ export function useApplicationData() {
       ...state.appointments,
       [id]: appointment
     };
-
-    const newDayItem = {
-      ...state.days[indexOfDay],
-      spots: spotsFromDay - 1
-    };
-
-    const newDaysList = {
-      ...state.days,
-      [indexOfDay]: newDayItem
-    }
 
     axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
     .then((response) => setState({...state, appointments, days: Object.values(newDaysList)}))
