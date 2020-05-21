@@ -1,3 +1,4 @@
+// mock axios code for jest testing purposes
 const fixtures = {
   days: [
     {

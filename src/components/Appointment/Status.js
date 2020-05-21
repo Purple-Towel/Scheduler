@@ -1,5 +1,6 @@
 import React from "react";
 
+// renders a status indicator with a message
 export default function Status(props) {
   const { message } = props;
   return (

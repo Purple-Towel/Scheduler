@@ -1,5 +1,6 @@
 import React from "react";
 
+// renders an empty appointment that has not been booked yet
 export default function Empty(props) {
   const { onAdd } = props;
   return (

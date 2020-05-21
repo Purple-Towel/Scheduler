@@ -2,6 +2,7 @@ import React from "react";
 
 import Button from "components/Button"
 
+// renders a confirmation box with a message
 export default function Confirm(props) {
   const { message, onConfirm, onCancel } = props
   return (

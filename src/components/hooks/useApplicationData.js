@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+// custom hook for managing the state in src/Application.js
 export function useApplicationData() {
   const [state, setState] = useState({
     day: "Monday",
@@ -11,6 +12,7 @@ export function useApplicationData() {
 
   const setDay = day => setState(prev => ({...prev, day }));
 
+  // initial axios data fetching
   useEffect(() => {
     Promise.all([
       Promise.resolve(axios.get("/api/days").then(result => result.data)),
@@ -21,7 +23,9 @@ export function useApplicationData() {
     })
   }, []);
 
+  // adds interview to the DB
   function bookInterview(id, interview, mode, errorMode, cb) {
+    // code that grabs the spots for the day and updates it
     const selectedDay = state.day;
     let indexOfDay = null;
     let spotsFromDay = null;
@@ -29,13 +33,13 @@ export function useApplicationData() {
     for (let i = 0; i < state.days.length; i ++) {
       if (state.days[i].name === selectedDay) {
         indexOfDay = i;
-        spotsFromDay = state.days[i].spots;
+        spotsFromDay = state.days[i].spots; 
       }
     }
 
     const newDayItem = {
       ...state.days[indexOfDay],
-      spots: state.appointments[id].interview ? spotsFromDay : spotsFromDay - 1
+      spots: state.appointments[id].interview ? spotsFromDay : spotsFromDay - 1 // logic to determine whether to subtract from spots remaining or not
     };
 
     const newDaysList = {
@@ -53,14 +57,16 @@ export function useApplicationData() {
     };
 
     axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
-    .then((response) => setState({...state, appointments, days: Object.values(newDaysList)}))
+    .then((response) => setState({...state, appointments, days: Object.values(newDaysList)})) // newDaysList must be converted to array
     .then(() => cb(mode, true))
     .catch(err => {
       cb(errorMode, true);
     });
   }
 
+  // removes interview from DB
   function cancelInterview(id, mode, errorMode, cb) {
+    // code that grabs the spots for the day and updates it
     const selectedDay = state.day;
     let indexOfDay = null;
     let spotsFromDay = null;
@@ -70,15 +76,6 @@ export function useApplicationData() {
         indexOfDay = i;
         spotsFromDay = state.days[i].spots;
       }
-    }
-
-    const appointment = {
-      ...state.appointments[id],
-      interview: null
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
     }
 
     const newDayItem = {
@@ -91,9 +88,17 @@ export function useApplicationData() {
       [indexOfDay]: newDayItem
     }
 
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    }
 
     axios.delete(`http://localhost:8001/api/appointments/${id}`)
-    .then((response) => setState({...state, appointments, days: Object.values(newDaysList)}))
+    .then((response) => setState({...state, appointments, days: Object.values(newDaysList)})) // newDaysList must be converted to array
     .then(() => cb(mode, true))
     .catch((err) => {
       cb(errorMode, true);

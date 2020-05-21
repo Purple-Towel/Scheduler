@@ -2,6 +2,7 @@ import React from "react";
 
 import "components/Appointment/styles.scss";
 
+// subcomponent imports
 import Header from "components/Appointment/Header";
 import Show from "components/Appointment/Show";
 import Empty from "components/Appointment/Empty";
@@ -10,9 +11,12 @@ import Status from "components/Appointment/Status";
 import Confirm from "components/Appointment/Confirm";
 import Error from "components/Appointment/Error";
 
+// hook imports
 import { useVisualMode } from "components/hooks/useVisualMode"
 
 export default function Appointment(props) {
+
+  // modes
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
@@ -25,9 +29,10 @@ export default function Appointment(props) {
 
   const { time, interview } = props;
   const { mode, transition, back } = useVisualMode(
-    interview ? SHOW : EMPTY
+    interview ? SHOW : EMPTY // logic to determine whether an appointment should start in SHOW or EMPTY mode
   );
   
+  // these functions manage transitioning to SAVING/DELETING mode before calling the book/cancel functions
   function save(name, interviewer) {
     const interview = {
       student: name,
@@ -41,6 +46,7 @@ export default function Appointment(props) {
     props.cancelInterview(props.id, EMPTY, ERR_DELETE, transition);
   }
 
+  // returns an appointment, conditionally changing depending on the mode
   return (
     <article className="appointment" data-testid="appointment">
       <Header time={time} />

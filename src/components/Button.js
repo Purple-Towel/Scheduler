@@ -3,17 +3,21 @@ import React from "react";
 import "components/Button.scss";
 import Classnames from "classnames";
 
+// renders a button with text 
 export default function Button(props) {
+   let { children, disabled, onClick, confirm, danger } = props;
+   
+   // logic to apply CSS styling
    let buttonClass = "button";
-   let classNames = Classnames(buttonClass, {"button--confirm": props.confirm}, {"button--danger": props.danger})
+   let classNames = Classnames(buttonClass, {"button--confirm": confirm}, {"button--danger": danger})
 
    return (
       <button 
          className={classNames} 
-         onClick={props.onClick}
-         disabled={props.disabled}
+         onClick={onClick}
+         disabled={disabled}
       >
-         {props.children}
+         {children}
       </button>
    );
 }

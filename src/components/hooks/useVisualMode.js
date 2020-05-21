@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+// custom hook to manage transitioning between modes in the src/Appointment/index.js
 export function useVisualMode(modeInit) {
   const [mode, setMode] = useState(modeInit);
   const [history, setHistory] = useState([modeInit]);
