@@ -31,7 +31,11 @@ npm run cypress
 ```
 
 ## Screenshots
+Before
 !["Page on load"](https://github.com/Purple-Towel/Scheduler/blob/master/docs/photo4.png)
+Adding
 ![Adding appointment"](https://github.com/Purple-Towel/Scheduler/blob/master/docs/photo3.png)
+Canceling
 !["Deleting appointment"](https://github.com/Purple-Towel/Scheduler/blob/master/docs/photo2.png)
+After
 !["After deletion"](https://github.com/Purple-Towel/Scheduler/blob/master/docs/photo1.png)
