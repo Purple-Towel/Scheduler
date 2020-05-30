@@ -56,7 +56,7 @@ export function useApplicationData() {
       [id]: appointment
     };
 
-    axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
+    axios.put(`/api/appointments/${id}`, appointment)
     .then((response) => setState({...state, appointments, days: Object.values(newDaysList)})) // newDaysList must be converted to array
     .then(() => cb(mode, true))
     .catch(err => {
@@ -97,7 +97,7 @@ export function useApplicationData() {
       [id]: appointment
     }
 
-    axios.delete(`http://localhost:8001/api/appointments/${id}`)
+    axios.delete(`/api/appointments/${id}`)
     .then((response) => setState({...state, appointments, days: Object.values(newDaysList)})) // newDaysList must be converted to array
     .then(() => cb(mode, true))
     .catch((err) => {
